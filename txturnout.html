@@ -123,47 +123,25 @@
             <div class="col-lg-14 col-lg-offset-0">
                 <h2>Methodology</h2>
                 <p style="text-indent: 3em">
-                Robotec's IR camera generates 320x256 pixel monochromatic images with 16-bit depth such as those pictured below. They provided to me 1000 images, 287 annotated with the bounding boxes surrounding humans. Their initial approach to human detection was to use a threshold-selective naive blob detection method such as that implemented in the opencv library (SimpleBlobDetector). Threshold selection presents several complications. There may be features that are brighter than humans so brightness alone is insufficient. Furthermore ambient lighting conditions will vary especially considering the robot's mobility. 
+                Methodology here.
                 </p>
 
-                <p style="text-align: center">
-                <img src="./img/flir_human_center.jpg", class="border"> &emsp;&emsp;
-                <img src="./img/flir_photocopier.jpg", class="border">  &emsp;&emsp;
-                <img src="./img/flir_human_distant.jpg", class="border">
+
+                <p>
+               And more.
                 </p>
 
                 <p>
-                To overcome those issues you could apply a catch-all threshold. While such an approach potentially recalls all human features it also captures all features that fall within a given intensity/contrast window such as lights, and electronic equipment, as exemplified above. This severly boosts false positive detections and esentially leaves all the work ahead of us whereby the discrimination of humans in those detected features is still required. Again the variability of the human subjects is tremendous, where they may be in a range of field depths, in a variety of poses, or partially obscured by dark objects. As such, feature selection and engineering quickly becomes an overwhelming laundry list with many edge cases. 
-                </p>
-
-                <p>
-                There are several approaches to avoiding such feature engineering and selection. One is to use a supervised <a href="https://en.wikipedia.org/wiki/Support_vector_machine">support vector machine</a> (SVM) initialized with a <a href="https://en.wikipedia.org/wiki/Histogram_of_oriented_gradients#SVM_classifier">histogram of oriented gradients</a> (HOG) descriptor. OpenCV implements such an approach but a cursory exploration of this method on the labelled data demonstrated poor performance, far below 50% recall and not calculated at a rate close to real-time.
+                More science.
                 </p>
                 <p>
-                An increasingly powerful approach, and that which was applied here, is the convolutional neural network (CNN). CNNs are complicated models with several moving parts. Since this project represents my first foray into CNNs, it is unrealistic to have attained a deep understanding of their implimentation but I nevertheless offer a high-level over view here. Feel free to <a class="page-scroll" href="#darknet">skip over</a> this section to the project specific discussion of CNNs below.
-
+             Super cool fact.
                 </p>
-                <h3 style="text-align: left">Neural Networks</h3>
+                <h3 style="text-align: left">Relevant section.</h3>
                 <p style="text-indent: 3em">
                 Neural networks (NNs) are inspired by biological neural systems whereby neurons have some probability of firing and causing subsequent activations of nearby neurons. These series of activations combine to represent a particular state. Different combinations of neuron activations lead to unique states. Multiple neurons may also combine to activate a single neuron. A NN similarly consists of nodes (neurons) which may be active, inactive, or somewhere in between and these nodes are arranged into layers. In the most simple case, 3 layers are required: an input layer, a hidden layer, and an output layer. The input layer will have a number of nodes representing its input data. In the case of image detection these input nodes are usually the pixels. The hidden layer nodes are each connected to every input node and every output node. How the hidden layer responds to the input layer may be modified by weighting its contribution to the subsequent activiations (weights) and setting its condition for firing (bias). In this way we may "train" the hidden layer by modifying its weights and biases such that a series of unique inputs will activate a specific output node reprsenting a unqiue feature. NNs are therefore a form of supervised learning. If we train a layer to respond to a known input to generate a given output then novel inputs which lead to the same output have some probability of being the same as the input for which the hidden layer was trained. By adding more hidden layers and more nodes to each layer, highly complex internodal relationships may be established for predicting the probable content any number of inputs.
                 </p>
 
-                <h3 style="text-align: left">Convolutional Neural Networks</h3>
-                <p style="text-indent: 3em">
-                Because of the complete connectivity between nodes in a NN, respresenting complex inputs requires fitting many thousands of weights. Considering a 100x100 pixel image with 3 color channels, it would be necessary to fit 30000 (100x100x3) weights for the detection of a single feature, more feature sensitivity would compound parameters. Furthermore, this network could only be used with equally-sized images. Not very useful in a world where our cell phones routinely record 10 million pixel images for example. Furthermore, fitting to a parameter space of this scale commonly results in over-fitting. 
-                </p>
-                <p>
-                Convolutional neural networks (CNNs) solve this problem by reducing the number of fit parameters by reducing neuron interconnectivity. This is achieved by several means. The neurons are arranged into 3 dimensions width, height, and depth. Each layer of the network transforms the pixel volumes into 3D neuron activations where the depth dimension represents the number of spacial filters which are trained on particular image features. Importantly each neural activation volume is only connected to a small region of the previous layer. By reducing the interconnectivity between neurons, the parameter space is significantly reduced. Finally, the last layer computes a class score for some region where the class represents a particular feature in a given sub-region, and this reduces the pixel volume dimensionality vector to the number of classes. 
-                </p>
-                <p>
-                Without delving into a full description of the nature of the layers in a CNN, typical networks invoke 5 types of layers: input; convolutional; activation; pooling; and the fully connected layer. Most distinct to CNNs are the convolutional (conv) and pooling layers (pool). Conv layers consist of a number filters which, in the case of images, span a subsection of the image. Each filter is passed over each subsection of the image but uses the same weights and biases, dramitically reducing fit paramters. Each filter is typically trained on a specfic feature in an image such as an edge, or color blob. Pool layers further reduce dimensionality by downsampling the filters. The combination and number of the layers used is part of network design and can be designed to suit specific applications.  For an introductory discussion of CNNs, with rich visualization aids, see Andrej Karpathy's excellent <a href="http://cs231n.github.io/convolutional-networks/#overview">discussion</a> of the subject.
-
-                </p>
-                <p id="darknet"></p>
-                <h3  style="text-align: left">Darknet (You Only Look Once)</h3>
-                <p style="text-indent: 3em">
-                There are a myriad of libraries available that implement CNNs, each with their various strengths and weaknesses. In this case I selected the open source <a href="http://pjreddie.com/darknet/">Darknet</a> CNN and in particular the You Only Look Once (<a href="http://pjreddie.com/darknet/yolo/">YOLO</a>) implementation. Darknet has several advantages. First, and perhaps foremost, it has already been used by Robotec in their visible cameras and therefore will compliment their robot's existing process pipeline. Another relevant feature of Darknet is its speed, comfortably achieving 40 FPS with a mean average precision of 79%. This speed is due partly to its use of the Nvidia <a href="https://developer.nvidia.com/cudnn">cudnn</a> library which exploits the robot's onboard GPU and is specifically designed for increasing the efficiency of CNN calculations. Also crucially, networks may may be retrainined with new data augmenting the features already known to the network. This is especially the case here where many features of humans that a CNN might find, such as certain combinations of edges, will be common to color and heat map human images.    
-                </p>
 
             </div>
         </div>
@@ -176,62 +154,13 @@
                 <h2>Analysis</h2>
                 <h3  style="text-align: left">Data Preparation</h3>
                 <p style="text-indent: 3em">
-                The first step was to prepare the data for training and testing. Robotec provided some 250 images annotated with bounding boxes of humans in the image. As such each image is accompanied by a text file specifiying the bounding boxes for humans features in that image. This resulted in some 270 training features since some images contained several humans. To augment this data I used the <a href="https://github.com/puzzledqs/BBox-Label-Tool">BBox-Label-Tool</a> to annotate the bounding boxes of humans in 150 more images. This brought the labelled data to 350 images. From those I set aside 250 images for training and 100 images for testing. To the testing set I added 100 images containing no humans to balance the data for false positives. The test set therefore consists of 200 images, half with human features, half with none. 
+               Analysis starts here.
                 </p>
-                <h3  style="text-align: left">Environment Setup and Darknet Implementation</h3>
+                <h3  style="text-align: left">subsection</h3>
                 <p style="text-indent: 3em">
-                As mentioned above, the robot is housed with a Linux system and built-in GPU. However, because Robotec is still very much in the product development phase, the Robot's resources were tied up with other processes and was often in offline mode. As such I prepared an GPU EC2 instance on Amazon Web Services (AWS) for setting up the training and testing environment. Specifically, I compiled the Nvidia cudnn and Darknet libraries.
+                words.
                 </p>
-                <p>
-                Because Darknet only operates on a single image at a time and generates a common data output file, I prepared a <a href="./scripts/darknet_test.sh">bash script</a> to launch sequential instances of Darknet pointing to a directory containing the test images. The script then moves the result log to a results directory and names it according to the input image name. Therefore for 200 test images, it generates 200 text files indicating the properties of the features found for a given image. Darknet also allows an option to output the test image with the bounding boxes as determined by the network. I combined these output images with <a href="https://ffmpeg.org/">ffmpeg</a> to produce a video of the results embedded below.
-                </p>
-
-                <p style="text-align: center">
-                <iframe width="800" height="450" src="https://www.youtube-nocookie.com/embed/jN0RL4mPxdY?rel=0&amp;showinfo=0" frameborder="1" allowfullscreen></iframe>
-                </p>
-
-                <p>
-                Cursory Inspection of the video reveals good performance using the weights pretrained on PASCAL visual object classes (VOC) <a href="http://host.robots.ox.ac.uk/pascal/VOC/">data</a>. While this represents a vast improvement over the naive blob, and SVM HOG descriptor approaches described above, there are clearly some false negatives, false positives, and mis-classifications.   
-                </p>
-                <h3  style="text-align: left">Determining Accuracy and Recall</h3>
-                <p style="text-indent: 3em">
-                In order to quantify the efficacy of the model I developed a <a href="./scripts/analyze.txt">python script</a> to inspect the results from Darknet compared with the human-labelled data. Because the human labelled and Darknet bounding box coordinates will have a slight variation it is neccesary to define what counts as a true positive. Similarly the area of matching boxes should be simlar to a defined degree. As such, two box pairs count as a match if they overlap to a specified threshold and have sufficiently similar areas. The later requirement is important to exclude false positives for feature pairs that happen to be fully overlap.
-                </p> 
-
-                <p>
-                From these definitions the script can determine and report: true and false postives; and true and false negatives, on a per image basis. These per image results may also be summarized to report the standard binary classifier measures  such as sensitivity, accuracy, and z-score. The complete list of analysis returned can be found <a href="https://en.wikipedia.org/wiki/Evaluation_of_binary_classifiers">here</a>. Another feature of the script is the ability to display the test images annotated with the human-labelled and Darknet bounding boxes. This can provide a good sanity check on the efficacy of the other analysis.
-                </p>
-                <h3  style="text-align: left">Results and Retraining</h3>
-                <p style="text-indent: 3em">
-                The graph below shows the accuracy and recall for the test data using the weights trained on VOC data at various thresholds. The threshold defines which features are outputted based on their classification certainty. The graph indicates a good compromise between accuracy and recall at a threshold of 0.25 with accuracy and recall both near 80%. At lower threholds recall approaches 100% but this severly compromises accuracy.  
-                </p>
-
-                <p style="text-align: center">
-                <img src="./img/accuracy.png">
-                </p>
-
-                <p>
-                In order to attempt to boost recall and accuracy attempts were made to retrain the model. Retraining involves some modification of the original C libraries and the last, fully-connected, network layer and programmatic preparation of the input files referencing the training set. With the available training set, these efforts led to no meaningful boost in recall or accuracy. This is likely best explained by two reasons. Firstly a paucity in training data where only 270 features are available represents a very small sample. Secondly, and perhaps more importantly, inspection of the humans features in the training set reveals a vast majority of features for which the model already accurately detected as human. Those features for which the the model failed, such as for obscured humans, or humans in unsual poses (see the images below), represent only a small subsample of the training data. By the very nature of the IR video camera, recording more images is relatively simple and a large data set may be quickly accrued. However, the most time consuming step in preparing these training data is in determining the bounding boxes of human features. Therefore, in order to improve the model I developed a data labelling pipeline for production of these features requiring minimal intervention by the development team.
-                </p>
-
-                <p style="text-align: center">
-                <img src="./img/flir_sitting.jpg", class="border"> &emsp;&emsp;
-                <img src="./img/flir_obscured.jpg", class="border">  &emsp;&emsp;
-                <img src="./img/flir_cow.jpg", class="border">
-                </p>
-
-                <h3  style="text-align: left">Data Labelling and Retraining Pipeline</h3>
-                <p style="text-indent: 3em">
-                The two most important qualities for any production line are that it should maximize automation, and it should produce consistent results. Those two requirements laid the grounding principles in my approach to the development of the retraining pipeline. This pipeline, illustrated in the figure below, starts from teh robot and proceeds accordingly: generate training images; store images online; human annotates bounding boxes; store box data online; retrieve box data; retrain with new data; test new model; incorporate new model.
-                </p>
-
-                <p style="text-align: center">
-                <img src="./img/pipeline.jpg">
-                </p>
-
-                <p>
-                All of these processes are automated within a single script which itself may eventually be incorporated into the robot's pipeline for full retraining automation. The crucial stages of image upload, bounding box determination are achieved with APIs of <a href="http://cloudinary.com/">Cloudinary</a> and <a href="https://www.scaleapi.com/">Scale</a>, respectively. Bounding box data for each image is stored in a JSON-like object on a <a href="http://heroku.com">Heroku</a> server which may be retrieved by the robot and incorporated into the training cycle. The scripts to achieve this can be viewed here. (<a href="./scripts/autobox.txt">autobox.py</a>, <a href="./scripts/wrap_cloud.txt">wrap_cloud.py</a>, <a href="./scripts/wrap_scale.txt">wrap_scale.py</a> )
-                </p>
+               
 
             </div>
         </div>
@@ -243,7 +172,7 @@
             <div class="col-lg-14 col-lg-offset-0">
                 <h2>Results</h2>
                 <p>
-                Robotec needed a solution to detect humans in these images in real time, and with maximum recall, and accuracy. This had to be an improvement on their naive blob approach. By implementing the Darknet neural network I achieved a recall and accuracy of ~78% while operating at over 30 FPS. This represents a significant improvement over their initial approach. More importantly I have created the tools and techniques to create ongoing improvement and therefore value to the product. In particular I created scripts to automate testing with Darknet, analysis of Darknet's results in comparison with the human-labelled data, and subsequent visualization of these results. Auxialliary to this, I created a retraining pipeline that should vastly increase their data to ensure further improvement in the model. This versatile pipeline is also easily adaptable to other detection systems on the robot and will therefore provide value to many aspects of the product.  
+                Some results. 
                 </p>
             </div>
         </div>
