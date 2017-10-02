@@ -26,14 +26,20 @@
 	        <section>
         <h2 id="introduction">Introduction</h2>
 	  
-	  <p>Any sort of predictive election analysis requires an estimate for the fraction of registered voters who will actually go to the polls and cast a vote — i.e., the voter turnout rate. This voter fraction, calibrated with registration statistics and actual polling figures, provides a hint to political campaigns and politically-minded organizations as to the result of future election results, and how close these races will be. They can then determine how time and monetary resources should be allocated, where get-out-the-vote campaigns are needed (or not), and set the overall communication strategy.</p>
+	  <p>Trying to flip a vote? You'll need to know who is most likely to turn up at the polls.  Any sort of election prediction analysis requires an estimate of the fraction of registered voters who will actually go to the polls and cast a vote — i.e., the voter turnout rate. This voter fraction, calibrated with registration statistics and pre-election polling figures, provides political campaigns and politically-minded organizations with a probable result of future elections, and how close any given race will be. They can then determine how to best allocate time and funding, where get-out-the-vote campaigns are most needed (or not necessary), and set the overall communication strategy with their members.</p>
 
-	  <p>Traditionally, determining how many people will actually head to the polls on election day is done with pre-election polling. However, direct polling is expensive and slow, and prone to a slew of random and systematic errors. Additionally, the efficacy of direct phone-based polling has <a href="https://www.nytimes.com/2015/06/21/opinion/sunday/whats-the-matter-with-polling.html?_r=0">plummeted</a> in recent years with the advent of cell phones and caller-id. Thus, being able to get some handle on the expected voter turnout rates from pre-existing, and mostly public, data could represent a significant step forward.
+	  <p>Traditionally, determining how many people will actually vote is done with pre-election polling. However, direct polling is expensive and slow, and prone to a slew of random and systematic errors. The efficacy of direct phone-based polling has <a href="https://www.nytimes.com/2015/06/21/opinion/sunday/whats-the-matter-with-polling.html?_r=0">plummeted</a> thanks to the proliferation of cell phones and caller-id. Instead, predicting expected voter turnout rates from pre-existing, and mostly public, data represents a far more accurate and efficient approach.
 	  </p>
 
-<p>I participated in the <a href="http://insightdatascience.com/">Insight Data Science Program</a> in the Fall of 2017. As part of Insight, I worked with the company <a href="https://www.valuevoting.com/">Value Voting</a> to help improve their prediction of future voter turnout rates. Value Voting works work with a variety of Texas-based organizations to advise where coordinated outreach campaigns can be the most effective. Specifically, by cross referencing a group's member list with upcoming elections, Value Vote can understand the districts in which an organization has significant political sway, all through an interactive, user-friendly dash board. These organizations can also view their processed member lists to see their individual members' voting 'power', a metric of how likely one is to vote, which can then be used for microtargeted communication strategy and to dictate effective use of resources. It should be stated, none of the I will present here is specific to the State of Texas.</p>
+<p>As a fellow at the <a href="http://insightdatascience.com/">Insight Data Science Program</a> in the Fall of 2017, I partnered with <a href="https://www.valuevoting.com/">Value Voting</a> to improve their prediction model for future voter turnout rates. Value Voting works with a variety of progressive, Texas-based organizations to advise where coordinated outreach campaigns will be most effective. By cross-referencing a group's member list with upcoming election figures, Value Vote identifies the districts in which an organization has significant political sway via an interactive user-friendly dash board. Value Voting delivers processed member lists that quantify individual members voting 'power', a metric of how likely someone is to vote, which organizations use to develop microtargeted communication strategies and maximize the impact of their resources. While the examples in this analysis are Texas-based, this approach can be applied to any of the 50 states.</p>
 
+<!--
 <p>  In this post, I will describe the work I did with Value Voting to help improve their methodology to predict overall voter turnout rates. In particular, I will highlight two different approaches to this challenge: one based on the individual level, where predicting whether a given person will vote or not is based on demographics and past voting history. In a complementary approach, I take a different view by examining factors specific to a given election which correlate with changes in the overall voter turnout rate. </p>
+-->
+
+<p>
+With one week to improve Value Voting's voter turnout prediction methodology, I used individual demographics and past election records to deliver a model with a 7 percent increase in voter prediction accuracy. While doing so, I also identified some major confounding factors that limit the accuracy of these approaches to predict future election turnout and how these elements may influence any given election.
+</p>
 
       </section>
 
@@ -43,7 +49,7 @@
 <h2 id="getting-started">Starting Out</h2>
 
 <p>
-I was supplied me with the 2016 voter registration role for the state of Texas, which includes the voter registration details for 14+ million Texans. Importantly, the data also included past election participation, for general & presidential (2008, 2012, 2016, etc.), midterm (2010, 2012, etc.) and primary elections. While voter registration, name, address, and past participation is publicly available, the dataset also included a number of externally sourced & constructed features, such as cell phone number, number of people in household, race, and gender.
+I was supplied me with the 2016 voter registration role for the state of Texas, which includes the voter registration details for 14+ million Texans. Importantly, the data also included past election participation, for general & presidential (2008, 2012, 2016, etc.), midterm (2010, 2012, etc.) and primary elections. While voter registration, name, address, and past participation is publicly available, the dataset also included a number of externally sourced & engineered features, such as cell phone number, number of people in household, race, and gender.
 </p>
 
 
@@ -106,8 +112,7 @@ For the classification, I began with logistic regression. It is fast to train, a
 
 
 <p>
-Primarily because past voting activity is such a good indicator of future activity, this approach does a fairly good job at predicting voter turnout. Overall, 
-[HERE’s the metrics I used - precision, recall, f1, confusion matrix, etc, 2012, 2016].
+Here I will focus on the prediction of Federal House races, though in principle this methodology would apply to any election. I train my model on whether or not someone voted in 2012 based on their past election activtiy. For validation, I test both on held-out 2012 data for use in tuning the model, and on 'unseen' 2016 election data, to gauge how well the model performs when working to predict future results. Primarily because past voting activity is such a good indicator of future activity, this approach does a fairly good job at predicting voter turnout. Overall, this model achieves accuracies of 78% for 2012 data, and 70% for the 2016 figures; the F1 score, representing the harmonic mean of precision and recall, is 0.81.
 </p>
 
 <p>
@@ -116,7 +121,11 @@ Likely voters have an average age of 60, are composed of 88% registered Democrat
 </p>
 
 <p>
-Unfortunately, though, working with Value Voting, my goal was to produce a model which exceeded their current working model, one where the voting turnout rate does not change. Turns out, simply using the past voting turnout rate for a similar election (midterm or presidential) is a fairly good approach since the previous turnout rate effectively encapsulates in the . Adding in additional demograph .
+Unfortunately, though, my goal here was to produce a model which exceeded Value Voting's current working model for the voter turnout rate -- one where the voting turnout rate does not change. Since the previous turnout rate effectively already encapsulates demographic information and voting history information, a demographics based approach represents a negligible improvement with respect predicting the overall voter turnout rate
+<!..My model would only formally be better if demograhpics  
+
+simply using the past voting turnout rate for a similar election (midterm or presidential) is a fairly good approach in the . Adding in additional demograph .
+-->
 </p>
 
 
@@ -129,7 +138,7 @@ Unfortunately, though, working with Value Voting, my goal was to produce a model
 <h2 id="getting-started">Election-Based Approach</h2>
 
 <p>
-To combat the limitation with the demographic-based approach described above, I opted for an approach based on broader, election-based features to see if there were certain features that could be used to build a predictive model for the voter turnout rates. Using the corpus of 2012, 2014, and 2016 Texas-state House and Senate races (aside: Texas districts were redrawn in 2012, thus making extending this analysis back a much more complex endeavor), I began to see if there was a correlation between the competitiveness of a race and the voter turnout race:
+To combat the limitation with the demographic-based approach described above, I opted for an approach based on broader, election-based characteristics to see if there were certain features that could be used to build a predictive model for the voter turnout rates. Using the corpus of 2012, 2014, and 2016 Texas-state House and Senate races<label for="sn-in-his-later-books" class="margin-toggle sidenote-number"></label> <span class="sidenote">Texas districts were redrawn in 2012, thus making extending this analysis back a much more complex endeavor.  </span>, I began to see if there was a correlation between the competitiveness of a race and the voter turnout race:
 </p>
 
         <figure>
@@ -142,7 +151,7 @@ Here, I'm showing a scatter plot of the voter turnout rate vs. vote margin for d
 </p>
 
 <p>
-However, different districts, with varied demographics (age distribution, income, density, etc.), likely have overall base voter turnout levels which may muddy the above analysis. So next, I took the districts which had the largest changes in voter turnout rates, to see if I could isolate what caused the change. Here is the voter turnout <i>change</i> between the 2012 and 2016 general election based on the competiveness of the equivalent 2012 election:
+However, different districts, with varied demographics (age distribution, income, density, etc.), likely have overall base voter turnout levels which may muddy the above analysis. Next, I took the districts which had the largest changes in voter turnout rates, to see if I could isolate what caused the change. Here is the voter turnout <i>change</i> between the 2012 and 2016 general election based on the competiveness of the equivalent 2012 election:
 </p>
 
 
@@ -158,19 +167,22 @@ Uncontested 2012 races see a 2012&rarr;2016 voter increase which is 55% greater 
 
 <p>
 While this relationship is noisy, from this starting point I was able to
-build a regression model, predicting the change in the voter turnout rate from the previous voter turnout margin and a number of other features (number of candidates, previous total votes cast, etc.). After feature scaling, a 2nd degree polynomial model fit the held-out test data the best. The overall R^2 for the fit is 0.48 — given the range of complex political and societal factors which likely impact the voter turnout rate, it’s surprising that such a simple model is able to, loosely speaking, explain 48% of the variance.
+build a regression model, predicting the change in the voter turnout rate from the previous voter turnout margin and a number of other features (number of candidates, previous total votes cast, etc.). After feature scaling, a 2nd degree polynomial model fit the held-out test data the best. The overall R^2 for the fit is 0.48 — given the range of complex political and societal factors which likely impact the voter turnout rate, it is surprising that such a simple model is able to, loosely speaking, explain 48% of the variance.
 </p>
 
 
 <p>
-From a business perspective, 
-The metric of most interest is how much better, or worse, this model preforms opposed to  preexisting model where voter turnout rates are assumed to be static, in terms of total voter error. Restricting ourself to the 2016 Texas State House and Senate primary races, the static model misclassified 1.97 million voters, while the model here reduced this misclassification number to 1.68 million. Given there were a total of 4.1 million votes in these elections, my model represents an improvement of roughly 7%.
+From a business perspective, the most interesting metric is how much better, or worse, this model preforms opposed to preexisting model where voter turnout rates are assumed to be static --- we will express this in terms of the total vote error. Restricting ourself to the 2016 Texas State House and Senate primary races, the static model misclassified 1.97 million voters, while the model here reduced this misclassification by 290,000 people to 1.68 million voters. Given there were a total of 4.1 million votes in these elections, my model represents an improvement of roughly 7%.
 </p>
 
 
+<!--
 <p>
-Due to the nature of the data and the problem, there are a number of issues with this model. Not enough training. Too many missing data points (for exa Not able to test properly on future, unseen years. And it will benefit greatly from as time progresses and new elections occur, effectively giving us more training data. It will also be crucial to examine how this model performs on the 2018 election. Importantly, given that this model is only able to to be trained on two elections (2014 and 2016), one presidential and one midterm.
+Due to the nature of the data and the problem, there are a number of issues with this model. There are a relatively small number (<1000) of training data points. A
+
+Too many missing data points -- if there wasn't a primary the year before, th (for exa Not able to test properly on future, unseen years. And it will benefit greatly from as time progresses and new elections occur, effectively giving us more training data. It will also be crucial to examine how this model performs on the 2018 election. Importantly, given that this model is only able to to be trained on two elections (2014 and 2016), one presidential and one midterm.
 </p>
+-->
 
 
 
@@ -181,7 +193,7 @@ Due to the nature of the data and the problem, there are a number of issues with
 <h2 id="getting-started">Afterthoughts</h2>
 
 <p>
-One of the key difficulties in this project, or any predictive analysis using election data, is the human factor. People are finicky creatures, and frequently make choices on whims, often inconsistently compared with their past behaviors. Elections and attitudes towards them, too, are complex entities. Perhaps a certain candidate’s message (or lack thereof) causes a surge in interest & enthusiasm. Or a wealthy donor decides to flip a race and buys significant airtime. Or a certain county <a href="https://www.thenation.com/article/there-are-868-fewer-places-to-vote-in-2016-because-the-supreme-court-gutted-the-voting-rights-act/">reduces the number of polling stations</a>. Biggest takeaway: predicting elections and human behavior is a <a href="http://blog.drivendata.org/2016/12/21/election-data/">difficult data science task</a>, fraught with uncertainties based around constantly shifting political ideas and attitudes. Indeed, if the most recent general election was any indication, predictions can be, unfortunately, very wrong. In spite of the challenges, I have built models based both on the demographics of an electorate, and features specific to elections, which are able to do a, and, hopefully bring some business value to Value Voting. The ultimate tests of these models can't be done yet, sadly, because the ground truth does not exist yet --- we've got to wait until 2018 and beyond.
+One of the key difficulties in this project, or any predictive analysis using election data, is the human factor. People are finicky creatures, and frequently make choices on whims, often inconsistently compared with their past behaviors. Elections and attitudes towards them, too, are complex beasts. Perhaps a certain candidate’s message (or lack thereof) causes a surge in interest & enthusiasm. Or a wealthy donor decides to flip a race and buys significant airtime. Or a certain county <a href="https://www.thenation.com/article/there-are-868-fewer-places-to-vote-in-2016-because-the-supreme-court-gutted-the-voting-rights-act/">reduces the number of polling stations</a>. Biggest takeaway: predicting elections and human behavior is a <a href="http://blog.drivendata.org/2016/12/21/election-data/">difficult data science task</a>, fraught with uncertainties based around constantly shifting political ideas and attitudes. Indeed, if the most recent general election was any indication, predictions can be, unfortunately, very wrong. In spite of the challenges, I have built models based both on the demographics of an electorate, and features specific to elections, which are able to do a, and, hopefully bring some business value to Value Voting. The ultimate tests of these models can't be done yet, sadly, because the ground truth does not exist yet --- we've got to wait until 2018 and beyond.
 </p>
 
 
