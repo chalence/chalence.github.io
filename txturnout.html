@@ -10,9 +10,9 @@
 
   <body>
     <article>
-<h1 id="tx-turnout">Texan Turnout</h1>
+<h1 id="tx-turnout">TexanTurnout</h1>
 <h2> Predicting Voter Turnout Rates in Texas Elections</h2>
-      <p class="subtitle">Chalence Safranek-Shrader</p>
+      <p class="subtitle"><a href="http://chalence.github.io">Chalence Safranek-Shrader</a></p>
 <section>
 
         <div class="epigraph">
@@ -21,155 +21,191 @@
             <footer>Larry J. Sabato, “Pendulum Swing”</footer>
 	  </blockquote>
 	  </div>
+	  </section>
 
+	        <section>
+        <h2 id="introduction">Introduction</h2>
 	  
-        <p>Any sort of predictive election analysis requires an estimate for the fraction of registered voters
-who will actually go to the polls and cast a vote - what we will call the voter turnout rate. This is traditionally done with pre-election polling. However, direct polling can be expensive and slow. Additionally, the efficacy of direct phone-based polling has plummeted in recent years with the advent of cell phones and caller-id. Thus, .</p>
+	  <p>Any sort of predictive election analysis requires an estimate for the fraction of registered voters who will actually go to the polls and cast a vote — i.e., the voter turnout rate. This voter fraction, calibrated with registration statistics and actual polling figures, provides a hint to political campaigns and politically-minded organizations as to the result of future election results, and how close these races will be. They can then determine how time and monetary resources should be allocated, where get-out-the-vote campaigns are needed (or not), and set the overall communication strategy.</p>
 
-<p>I participated in the <a href="http://insightdatascience.com/">Insight Data Science Program</a> in the Fall of 2017. As part of Insight, I worked with the company <a href="https://www.valuevoting.com/">Value Voting</a> to help improve their prediction of future voter turnout rates. Value Voting works work with a variety of Texas-based organizations who want to affect political change to inform the feasibility of coordinated outreach campaigns. Specifically, by analyzing a group's member list, Value Vote can understand where , all through an interactive dash . These organizations can also view their processed member lists, and understand which political districts  , which can then be used in targeted , and to dictate an organizations strategy and effective use of resources. It should be stated, none of this analysis I will present here is specific to the State of Texas..</p>
+	  <p>Traditionally, determining how many people will actually head to the polls on election day is done with pre-election polling. However, direct polling is expensive and slow, and prone to a slew of random and systematic errors. Additionally, the efficacy of direct phone-based polling has <a href="https://www.nytimes.com/2015/06/21/opinion/sunday/whats-the-matter-with-polling.html?_r=0">plummeted</a> in recent years with the advent of cell phones and caller-id. Thus, being able to get some handle on the expected voter turnout rates from pre-existing, and mostly public, data could represent a significant step forward.
+	  </p>
 
-<p>  In this post, I will describe the work I did with Value Voting to help improve their methodology to predict overall voter turnout rates. In particular, I will highlight two different approaches to this challenge: one is based on the individual level, where I predict whether a given person or not will vote based on demographics and past voting history. In a complementary approach, I take a different view by examining what factors particular to a given election may cause the overall turnout rate to change..</p>
+<p>I participated in the <a href="http://insightdatascience.com/">Insight Data Science Program</a> in the Fall of 2017. As part of Insight, I worked with the company <a href="https://www.valuevoting.com/">Value Voting</a> to help improve their prediction of future voter turnout rates. Value Voting works work with a variety of Texas-based organizations to advise where coordinated outreach campaigns can be the most effective. Specifically, by cross referencing a group's member list with upcoming elections, Value Vote can understand the districts in which an organization has significant political sway, all through an interactive, user-friendly dash board. These organizations can also view their processed member lists to see their individual members' voting 'power', a metric of how likely one is to vote, which can then be used for microtargeted communication strategy and to dictate effective use of resources. It should be stated, none of the I will present here is specific to the State of Texas.</p>
+
+<p>  In this post, I will describe the work I did with Value Voting to help improve their methodology to predict overall voter turnout rates. In particular, I will highlight two different approaches to this challenge: one based on the individual level, where predicting whether a given person will vote or not is based on demographics and past voting history. In a complementary approach, I take a different view by examining factors specific to a given election which correlate with changes in the overall voter turnout rate. </p>
 
       </section>
 
-      <section>
-        <h2 id="getting-started">Getting Started</h2>
-        <p>To use Tufte CSS, copy <code>tufte.css</code> and the <code>et-book</code> directory of font files to your project directory, then add the following to your HTML document’s <code>head</code> block:</p>
 
-        <pre class="code">&lt;link rel="stylesheet" href="tufte.css"/&gt;</pre>
-
-        <p>Now you just have to use the provided CSS rules, and the Tufte CSS conventions described in this document. For best results, View Source and Inspect Element frequently.</p>
-      </section>
 
       <section>
-        <h2 id="fundamentals">Fundamentals</h2>
-        <h3 id="fundamentals--sections-and-headers">Sections and Headings</h3>
-        <p>Organize your document with an <code>article</code> element inside your <code>body</code> tag. Inside that, use <code>section</code> tags around each logical grouping of text and headings.</p>
-        <p>Tufte CSS uses <code>h1</code> for the document title, <code>p</code> with class <code>subtitle</code> for the document subtitle, <code>h2</code> for section headings, and <code>h3</code> for low-level headings. More specific headings are not supported. If you feel the urge to reach for a heading of level 4 or greater, consider redesigning your document:</p>
-        <blockquote cite="http://www.edwardtufte.com/bboard/q-and-a-fetch-msg?msg_id=0000hB">
-          <p>[It is] notable that the Feynman lectures (3 volumes) write about all of physics in 1800 pages, using only 2 levels of hierarchical headings: chapters and A-level heads in the text. It also uses the methodology of <em>sentences</em> which then cumulate sequentially into <em>paragraphs</em>, rather than the grunts of bullet points. Undergraduate Caltech physics is very complicated material, but it didn’t require an elaborate hierarchy to organize.</p>
-          <footer><a href="http://www.edwardtufte.com/bboard/q-and-a-fetch-msg?msg_id=0000hB">Edward Tufte, forum post, ‘Book design: advice and examples’ thread</a></footer>
-        </blockquote>
-        <p>As a bonus, this excerpt regarding the use of headings provides an example of block quotes. In Tufte CSS they are just lightly styled, semantically correct HTML using <code>blockquote</code> and <code>footer</code> elements. See page 20 of <a href="https://www.edwardtufte.com/tufte/books_vdqi">The Visual Display of Quantitative Information</a> for an example in print.</p>
-        <p><span class="newthought">In his later books<label for="sn-in-his-later-books" class="margin-toggle sidenote-number"></label></span><input type="checkbox" id="sn-in-his-later-books" class="margin-toggle"/><span class="sidenote"><a href="http://www.edwardtufte.com/tufte/books_be"><em>Beautiful Evidence</em></a></span>, Tufte starts each section with a bit of vertical space, a non-indented paragraph, and the first few words of the sentence set in small caps. For this we use a span with the class <code>newthought</code>, as demonstrated at the beginning of this paragraph. Vertical spacing is accomplished separately through <code>&lt;section&gt;</code> tags. Be consistent: though we do so in this paragraph for the purpose of demonstration, do not alternate use of header elements and the <code>newthought</code> technique. Pick one approach and stick to it.</p>
+<h2 id="getting-started">Starting Out</h2>
 
-        <h3 id="fundamentals--text">Text</h3>
-        <p>Although paper handouts obviously have a pure white background, the web is better served by the use of slightly off-white and off-black colors. Tufte CSS uses <code>#fffff8</code> and <code>#111111</code> because they are nearly indistinguishable from their ‘pure’ cousins, but dial down the harsh contrast. We stick to the greyscale for text, reserving color for specific, careful use in figures and images.</p>
-        <p>In print, Tufte has used the proprietary Monotype Bembo<label for="sn-proprietary-monotype-bembo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-proprietary-monotype-bembo" class="margin-toggle"/><span class="sidenote">See Tufte’s comment in the <a href="http://www.edwardtufte.com/bboard/q-and-a-fetch-msg?msg_id=0000Vt">Tufte book fonts</a> thread.</span> font. A similar effect is achieved in digital formats with the now open-source <a href="https://github.com/edwardtufte/et-book">ETBook</a>, which Tufte CSS supplies with a <code>@font-face</code> reference to a .ttf file. In case ETBook somehow doesn’t work, Tufte CSS shifts gracefully to other serif fonts like Palatino and Georgia.</p>
-        <p>Also notice how Tufte CSS includes separate font files for bold (strong) and italic (emphasis), instead of relying on the browser to mechanically transform the text. This is typographic best practice.</p>
-        <p class="sans">If you prefer sans-serifs, use the <code>sans</code> class. It relies on Gill Sans, Tufte’s sans-serif font of choice.</p>
-        <p>Links in Tufte CSS match the body text in color and do not change on mouseover or when clicked. Here is a <a href="#">dummy example</a> that goes nowhere. These links are underlined, since this is the most widely recognized indicator of clickable text. <label for="mn-blue-links" class="margin-toggle">&#8853;</label><input type="checkbox" id="mn-blue-links" class="margin-toggle"/><span class="marginnote">Blue text, while also a widely recognizable clickable-text indicator, is crass and distracting. Luckily, it is also rendered unnecessary by the use of underlining.</span> However, because most browsers’ default underlining does not clear descenders and is so thick and distracting, the underline effect is instead achieved using CSS trickery involving background gradients instead of standard <code>text-decoration</code>. Credit goes to Adam Schwartz for that technique.</p>
-        <p>As always, these design choices are merely one approach that Tufte CSS provides by default. Other approaches, such as changing color on click or mouseover, or using highlighting or color instead of underlining to denote links, could also be made to work. The goal is to make sentences readable without interference from links, as well as to make links immediately identifiable even by casual web users.</p>
-      </section>
+<p>
+I was supplied me with the 2016 voter registration role for the state of Texas, which includes the voter registration details for 14+ million Texans. Importantly, the data also included past election participation, for general & presidential (2008, 2012, 2016, etc.), midterm (2010, 2012, etc.) and primary elections. While voter registration, name, address, and past participation is publicly available, the dataset also included a number of externally sourced & constructed features, such as cell phone number, number of people in household, race, and gender.
+</p>
 
-      <section>
-        <h2 id="epigraphs">Epigraphs</h2>
-        <div class="epigraph">
-          <blockquote>
-            <p>The English language . . . becomes ugly and inaccurate because our thoughts are foolish, but the slovenliness of our language makes it easier for us to have foolish thoughts.</p>
-            <footer>George Orwell, “Politics and the English Language”</footer>
-          </blockquote>
-          <blockquote>
-            <p>For a successful technology, reality must take precedence over public relations, for Nature cannot be fooled.</p>
-            <footer>Richard P. Feynman, <cite>“What Do You Care What Other People Think?”</cite></footer>
-          </blockquote>
-          <blockquote>I do not paint things, I paint only the differences between things.<footer>Henri Matisse, <cite>Henri Matisse Dessins: thèmes et variations</cite> (Paris, 1943), 37</footer></blockquote>
-        </div>
-        <p>If you’d like to introduce your page or a section of your page with some quotes, use epigraphs. Modeled after chapter epigraphs in Tufte’s books (particularly <em>Beautiful Evidence</em>), these are <code>blockquote</code> elements with a bit of specialized styling. Quoted text is italicized. The source goes in a <code>footer</code> element inside the <code>blockquote</code>. We have provided three examples in the epigraph of this section, demonstrating shorter and longer quotes, with and without a paragraph tag, and showing how multiple quotes within an epigraph fit together with the use of a wrapper class.</p>
-      </section>
 
-      <section>
-        <h2 id="sidenotes">Sidenotes: Footnotes and Marginal Notes</h2>
-        <p>One of the most distinctive features of Tufte’s style is his extensive use of sidenotes.<label for="sn-extensive-use-of-sidenotes" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-extensive-use-of-sidenotes" class="margin-toggle"/><span class="sidenote">This is a sidenote.</span> Sidenotes are like footnotes, except they don’t force the reader to jump their eye to the bottom of the page, but instead display off to the side in the margin. Perhaps you have noticed their use in this document already. You are very astute.</p>
-        <p>Sidenotes are a great example of the web not being like print. On sufficiently large viewports, Tufte CSS uses the margin for sidenotes, margin notes, and small figures. On smaller viewports, elements that would go in the margin are hidden until the user toggles them into view. The goal is to present related but not necessary information such as asides or citations <em>as close as possible</em> to the text that references them. At the same time, this secondary information should stay out of the way of the eye, not interfering with the progression of ideas in the main text.</p>
-        <p>Sidenotes consist of two elements: a superscript reference number that goes inline with the text, and a sidenote with content. To add the former, just put a label and dummy checkbox into the text where you want the reference to go, like so:</p>
-        <pre class="code">
-&lt;label for="sn-demo"
-       class="margin-toggle sidenote-number"&gt;
-&lt;/label&gt;
-&lt;input type="checkbox"
-       id="sn-demo"
-       class="margin-toggle"/&gt;</pre>
-        <p>You must manually assign a reference <code>id</code> to each side or margin note, replacing “sn-demo” in the <code>for</code> and the <code>id</code> attribute values with an appropriate descriptor. It is useful to use prefixes like <code>sn-</code> for sidenotes and <code>mn-</code> for margin notes.</p>
-        <p>Immediately adjacent to that sidenote reference in the main text goes the sidenote content itself, in a <code>span</code> with class <code>sidenote</code>. This tag is also inserted directly in the middle of the body text, but is either pushed into the margin or hidden by default. Make sure to position your sidenotes correctly by keeping the sidenote-number label close to the sidenote itself.</p>
-        <p>If you want a sidenote without footnote-style numberings, then you want a margin note.
-          <label for="mn-demo" class="margin-toggle">&#8853;</label>
-          <input type="checkbox" id="mn-demo" class="margin-toggle"/>
-          <span class="marginnote">
-            This is a margin note. Notice there isn’t a number preceding the note.
-          </span> On large screens, a margin note is just a sidenote that omits the reference number. This lessens the distracting effect taking away from the flow of the main text, but can increase the cognitive load of matching a margin note to its referent text. However, on small screens, a margin note is like a sidenote except its viewability-toggle is a symbol rather than a reference number. This document currently uses the symbol &#8853; (<code>&amp;#8853;</code>), but it’s up to you.</p>
-        <p>Margin notes are created just like sidenotes, but with the <code>marginnote</code> class for the content and the <code>margin-toggle</code> class for the label and dummy checkbox. For instance, here is the code for the margin note used in the previous paragraph:</p>
-        <pre class="code">
-&lt;label for="mn-demo" class="margin-toggle"&gt;&amp;#8853;&lt;/label&gt;
-&lt;input type="checkbox" id="mn-demo" class="margin-toggle"/&gt;
-&lt;span class="marginnote"&gt;
-  This is a margin note. Notice there isn’t a number preceding the note.
-&lt;/span&gt;</pre>
-        <p>Figures in the margin are created as margin notes, as demonstrated in the next section.</p>
-      </section>
+<p>
+I was additionally given a high-level summary of every past Texas election (Federal, State, & primaries), which included winner votes, runner-up votes, and total number of candidates running. Finally, for Texas State House and Senate primary races, I supplemented this election summary with publicly available data of money spent by candidates.
+</p>
 
-      <section>
-        <h2 id="figures">Figures</h2>
-        <p>Tufte emphasizes tight integration of graphics with text. Data, graphs, and figures are kept with the text that discusses them. In print, this means they are not relegated to a separate page. On the web, that means readability of graphics and their accompanying text without extra clicks, tab-switching, or scrolling.</p>
-        <p>Figures should try to use the <code>figure</code> element, which by default are constrained to the main column. Don’t wrap figures in a paragraph tag. Any label or margin note goes in a regular margin note inside the figure. For example, most of the time one should introduce a figure directly into the main flow of discussion, like so:</p>
+
+
+<p>
+My initial step were search for any high-level insights which would inform me if a demographic approach would work, done by finding trends between overall voter turnout rate and demographic groups. The following plot is one such example, where I show the overall voting turnout rate for different age groups:</p>
+
         <figure>
-          <label for="mn-exports-imports" class="margin-toggle">&#8853;</label><input type="checkbox" id="mn-exports-imports" class="margin-toggle"/><span class="marginnote">From Edward Tufte, <em>Visual Display of Quantitative Information</em>, page 92.</span>
-          <img src="img/exports-imports.png" alt="Exports and Imports to and from Denmark & Norway from 1700 to 1780" />
+          <label for="mn-exports-imports" class="margin-toggle">&#8853;</label><input type="checkbox" id="mn-exports-imports" class="margin-toggle"/><span class="marginnote">Voter turnout rate in the 2016 general election broken down by age group.</span>
+          <img src="images/age_turnout.png" alt="age-turnout" />
         </figure>
 
-        <p><label for="mn-figure-1" class="margin-toggle">&#8853;</label><input type="checkbox" id="mn-figure-1" class="margin-toggle"/><span class="marginnote"><img src="img/rhino.png" alt="Image of a Rhinoceros"/>F.J. Cole, “The History of Albrecht Dürer’s Rhinoceros in Zooological Literature,” <em>Science, Medicine, and History: Essays on the Evolution of Scientific Thought and Medical Practice</em> (London, 1953), ed. E. Ashworth Underwood, 337-356. From page 71 of Edward Tufte’s <em>Visual Explanations</em>.</span> But tight integration of graphics with text is central to Tufte’s work even when those graphics are ancillary to the main body of a text. In many of those cases, a margin figure may be most appropriate. To place figures in the margin, just wrap an image (or whatever) in a margin note inside a <code>p</code> tag, as seen to the right of this paragraph.</p>
-        <p>If you need a full-width figure, give it the <code>fullwidth</code> class. Make sure that’s inside an <code>article</code>, and it will take up (almost) the full width of the screen. This approach is demonstrated below using Edward Tufte’s English translation of the Napoleon’s March data visualization. From <em>Beautiful Evidence</em>, page 122-124.</p>
-        <figure class="fullwidth">
-          <img src="img/napoleons-march.png" alt="Figurative map of the successive losses of the French Army in the Russian campaign, 1812-1813" />
+
+<p>Unsurprisingly, people below the age of 30 tend to vote less than older people, though the trend does start to turn over for people older than 70.</p>
+
+<p>Voter turnout also depends strongly on a given person’s voting history — people who voted in the past will tend to do so again, as we see below, where voter turnout rate is segmented based on the number of previous votes (since 2000) someone has participated in (this also conflates age with turnout rate, though — someone who has been able to vote in 6 votes as of 2016 must have been born in or before 1986).</p>
+
+        <figure>
+          <label for="mn-exports-imports" class="margin-toggle">&#8853;</label><input type="checkbox" id="mn-exports-imports" class="margin-toggle"/><span class="marginnote">Voter turnout rate in the 2016 general election broken number of previous votes cast in general elections since 2000</span>
+          <img src="images/turnout_nvotes.png" alt="age-turnout" />
+</figure>
+
+
+<p>Finally, while analyzing the data, it also became clear that different districts (Federal and State) have large differences in the voter turnout rate. This could be due to a number of reasons -- different levels of enthusiasm for a given race, overall socioeconomic status, differences between ethnic groups, access to voting locations, etc. Since Value Voting is primarily interested in the voter turnout rate within these districts, and I didn't have immediate access to this supplementary data, it made sense to separate this analysis by district, opposed to combining them all into a single model.
+</p>
+
+
+</section>
+
+      <section>
+        <h2 id="demographics">Demographics-Based Approach</h2>
+
+<p>
+For my first approach to this problem, I opted for to focus on voter demographics. Here, I treat individual voters as the datapoints, and I classify whether they will vote or not in a future election based on their demographic features (age, sex, party affiliation) and their past voting history.
+</p>
+
+<p>
+While this is a relatively straightforward binary classification problem, the main challenge lies in how to compress a person’s potentially complex voting history (composed of state and presidential primaries, and general elections) to one or a few meaningful quantitative features. I experimented with a number of approaches:
+<ul>
+<li>Last1 = Did a person vote in the previous election?</li> 
+<li>LastX = Of the last X votes, how many did they vote in?</li>
+<li>Voting fraction = of the number of votes a person has been eligible for, what fraction did they vote in? </li>
+<li>Voting fraction + tscore. Here tscore is a quantitive value between 0 and 1 which expresses how recently a person’s votes have been<label for="sn-in-his-later-books" class="margin-toggle sidenote-number"></label> <span class="sidenote">For example is someone voted in 2014, but not in 2016, their voting fraction would be 0.5, but with a tscore of 0. The reverse -- voted 2016, not 2014 -- would result in a tscore of 1.  </span> </li>
+  <li>Individual binary 0 & 1 labels for each individual type of vote and how many votes ago in the past it was. </li>
+ </ul>
+</p>
+
+<p>
+All of these voting history features produce accuracies within 5% of each other. For its simplicity and accuracy, though, I find LastX with X=2 to produce the best classification rates, and has the advantage of being relatively simple to understand and compute. Specifically, Last2 is the number of votes in the last two similar elections (midterm, primary, presidential) compared with the target variable.
+</p>
+
+<p>
+For the classification, I began with logistic regression. It is fast to train, and highly interpretable. Overall, this dataset has many, many more samples than it does features (and potential combination of features), and thus the particular choice of algorithm did not significantly matter --- other more complex classification algorithms (random forest, SVM, etc.) did not produce significantly different levels of accuracy.
+</p>
+
+
+<p>
+Primarily because past voting activity is such a good indicator of future activity, this approach does a fairly good job at predicting voter turnout. Overall, 
+[HERE’s the metrics I used - precision, recall, f1, confusion matrix, etc, 2012, 2016].
+</p>
+
+<p>
+Along with a no vote/vote classification, logistic regression also supplies the confidence, in the form of a probability, of its prediction. The probability that someone is going to vote turns out to be an extremely useful metric for Value Voting and its customers since it enables microtargeting. Voter microtargeting is a deliberate focus on individual people or groups by political organizations based on their expected vote or propensity to visit the polls. For example, some organizations may wish to only reach out to those who are almost certain to vote in a forthcoming election, while other outreach campaigns may instead wish to target those on the fence about voting in an effort to increase turnout. If we classify ‘likely voters’ as those with a probability of voting (PV) of PV > 0.9, and ‘on the fence’ voters as those with 0.3 < PV < 0.6, we can immediately understand the characteristics of these two groups by segmenting our dataset:
+Likely voters have an average age of 60, are composed of 88% registered Democrats and Republicans, and have voted an average of 84% of the time they’ve been eligible. Fence voters, on the other hand, have an average age of 43, have only voted an average of 0.6 times, and 66% are unaffiliated with a political party.
+</p>
+
+<p>
+Unfortunately, though, working with Value Voting, my goal was to produce a model which exceeded their current working model, one where the voting turnout rate does not change. Turns out, simply using the past voting turnout rate for a similar election (midterm or presidential) is a fairly good approach since the previous turnout rate effectively encapsulates in the . Adding in additional demograph .
+</p>
+
+
+
+</section>
+
+
+
+      <section>
+<h2 id="getting-started">Election-Based Approach</h2>
+
+<p>
+To combat the limitation with the demographic-based approach described above, I opted for an approach based on broader, election-based features to see if there were certain features that could be used to build a predictive model for the voter turnout rates. Using the corpus of 2012, 2014, and 2016 Texas-state House and Senate races (aside: Texas districts were redrawn in 2012, thus making extending this analysis back a much more complex endeavor), I began to see if there was a correlation between the competitiveness of a race and the voter turnout race:
+</p>
+
+        <figure>
+          <label for="mn-exports-imports" class="margin-toggle">&#8853;</label><input type="checkbox" id="mn-exports-imports" class="margin-toggle"/><span class="marginnote"> 2016 House of Representatives Primary & General vote turnout rate broken down by district and victory margin.</span>
+          <img src="images/margin_turnout_scatter.png" alt="vmargin-turnout" />
         </figure>
-        <p>One obstacle to creating elegant figures on the web is the difficulty of handling different screen sizes, especially on the fly. Embedded <code>iframe</code> elements are particularly troublesome. For these instances we provide a helper class, <code>iframe-wrapper</code>, the most common use for which is probably YouTube videos, e.g.</p>
-        <pre class="code">
-&lt;figure class="iframe-wrapper"&gt;
-  &lt;iframe width="853" height="480" src="https://www.youtube.com/embed/YslQ2625TR4" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
-&lt;/figure&gt;
-        </pre>
-        <figure class="iframe-wrapper">
-          <iframe width="853" height="480" src="https://www.youtube.com/embed/YslQ2625TR4" frameborder="0" allowfullscreen></iframe>
+
+<p>
+Here, I'm showing a scatter plot of the voter turnout rate vs. vote margin for different election districts. Here, vote margin (which I use here as a proxy for competitiveness) is the percent difference  of received votes between the race victor and the runner up, such that 0% would be a tie, and 100% is an uncontested race. There doesn’t seem to be much of a correlation, which came as a surprise: I would naively have expected close, competitive races to have attracted more people to the polls in a particular district.
+</p>
+
+<p>
+However, different districts, with varied demographics (age distribution, income, density, etc.), likely have overall base voter turnout levels which may muddy the above analysis. So next, I took the districts which had the largest changes in voter turnout rates, to see if I could isolate what caused the change. Here is the voter turnout <i>change</i> between the 2012 and 2016 general election based on the competiveness of the equivalent 2012 election:
+</p>
+
+
+        <figure>
+          <label for="mn-exports-imports" class="margin-toggle">&#8853;</label><input type="checkbox" id="mn-exports-imports" class="margin-toggle"/><span class="marginnote">The change in the voter turnout rate in Texas State House and Senate primary races, broken up by the vote margin of the <i>previous</i> 2012 election. Note: overall, election turnout increased from 2012 to 2016.</span>
+          <img src="images/turnout_change_margin.png" alt="vmargin-turnout" />
         </figure>
-        <p>You can use this class on a <code>div</code> instead of a <code>figure</code>, with slightly different results but the same general effect. Experiment and choose depending on your application.</p>
-      </section>
+
+<p>
+Uncontested 2012 races see a 2012&rarr;2016 voter increase which is 55% greater than non-uncontested races in 2016. One may understand this as follows: uncontested seats in a given year have a significantly higher chance of becoming contested by a serious candidate the following election year. These new candidates, seeing a potential opening, conduct widespread campaigns, spend more money on average, and thus produce a surge in the number of votes cast.
+</p>
+
+
+<p>
+While this relationship is noisy, from this starting point I was able to
+build a regression model, predicting the change in the voter turnout rate from the previous voter turnout margin and a number of other features (number of candidates, previous total votes cast, etc.). After feature scaling, a 2nd degree polynomial model fit the held-out test data the best. The overall R^2 for the fit is 0.48 — given the range of complex political and societal factors which likely impact the voter turnout rate, it’s surprising that such a simple model is able to, loosely speaking, explain 48% of the variance.
+</p>
+
+
+<p>
+From a business perspective, 
+The metric of most interest is how much better, or worse, this model preforms opposed to  preexisting model where voter turnout rates are assumed to be static, in terms of total voter error. Restricting ourself to the 2016 Texas State House and Senate primary races, the static model misclassified 1.97 million voters, while the model here reduced this misclassification number to 1.68 million. Given there were a total of 4.1 million votes in these elections, my model represents an improvement of roughly 7%.
+</p>
+
+
+<p>
+Due to the nature of the data and the problem, there are a number of issues with this model. Not enough training. Too many missing data points (for exa Not able to test properly on future, unseen years. And it will benefit greatly from as time progresses and new elections occur, effectively giving us more training data. It will also be crucial to examine how this model performs on the 2018 election. Importantly, given that this model is only able to to be trained on two elections (2014 and 2016), one presidential and one midterm.
+</p>
+
+
+
+</section>
+
 
       <section>
-        <h2 id="code">Code</h2>
-        <p>Technical jargon, programming language terms, and code samples are denoted with the <code>code</code> class, as I’ve been using in this document to denote HTML. Code needs to be monospace for formatting purposes and to aid in code analysis, but it must maintain its readability. To those ends, Tufte CSS follows GitHub’s font selection, which shifts gracefully along the monospace spectrum from the elegant but rare Consolas all the way to good old reliable Courier.</p>
-        <p>Extended code examples should use a <code>pre</code> tag with class <code>code</code>. This adds control over indentation and overflow as well:</p>
-        <pre class="code">;; Some code examples in Clojure. This is a comment.
+<h2 id="getting-started">Afterthoughts</h2>
 
-;; applying a function to every item in the collection
-(map tufte-css blog-posts)
-;;;; if unfamiliar, see http://www.lispcast.com/annotated-map
+<p>
+One of the key difficulties in this project, or any predictive analysis using election data, is the human factor. People are finicky creatures, and frequently make choices on whims, often inconsistently compared with their past behaviors. Elections and attitudes towards them, too, are complex entities. Perhaps a certain candidate’s message (or lack thereof) causes a surge in interest & enthusiasm. Or a wealthy donor decides to flip a race and buys significant airtime. Or a certain county <a href="https://www.thenation.com/article/there-are-868-fewer-places-to-vote-in-2016-because-the-supreme-court-gutted-the-voting-rights-act/">reduces the number of polling stations</a>. Biggest takeaway: predicting elections and human behavior is a <a href="http://blog.drivendata.org/2016/12/21/election-data/">difficult data science task</a>, fraught with uncertainties based around constantly shifting political ideas and attitudes. Indeed, if the most recent general election was any indication, predictions can be, unfortunately, very wrong. In spite of the challenges, I have built models based both on the demographics of an electorate, and features specific to elections, which are able to do a, and, hopefully bring some business value to Value Voting. The ultimate tests of these models can't be done yet, sadly, because the ground truth does not exist yet --- we've got to wait until 2018 and beyond.
+</p>
 
-;; side-effecty loop (unformatted, causing text overflow) - from https://clojuredocs.org/clojure.core/doseq
-(doseq [[[a b] [c d]] (map list (sorted-map :1 1 :2 2) (sorted-map :3 3 :4 4))] (prn (* b d)))
 
-;; that same side-effecty loop, formatted
-(doseq [[[a b] [c d]] (map list
-                           (sorted-map :1 1 :2 2)
-                           (sorted-map :3 3 :4 4))]
-  (prn (* b d)))
+<p>
+Given more time, it would be interesting to understand & quantify the broader political factors which directly impact voter turnout rates. As a concrete example, the 2010 midterm election after President Obama’s election saw voter turnout rates surge among registered republicans, particularly in primary contests. This is generally understood as due to the rise of the Tea Party movement and backlash towards Obama’s fiscal policies. Using this as a rough guide, it seems safe to say voter turnout rates, particularly among democrats, will similarly surge in the 2018 midterm elections, with voters electrified in opposition to Donald Trump’s unique blend of populism and crass. The models I presented above are not designed to detect such a surge. However, it seems likely that by utilizing some combination of polling data, text-mining, and sentiment analysis of Tweets, Facebook posts, news articles, etc., data science could understand these overt political trends, and perhaps eventually exceed the foresight of even the most astute political observers.
+</p>
 
-;; If this proselytizing has worked, check out:
-;; http://howistart.org/posts/clojure/1</pre>
-      </section>
+
+
+</section>
+
+
+
 
       <section>
-        <h2 id="imagequilts">ImageQuilts</h2>
-        <p>Tufte CSS provides support for Edward Tufte and Adam Schwartz’s <a href="http://imagequilts.com/">ImageQuilts</a>. See the <a href="http://www.edwardtufte.com/bboard/q-and-a-fetch-msg?msg_id=0003wk">ET forum announcement thread</a> for more on quilts. Some have ragged edges, others straight. Include these images just as you would any other <code>figure</code>.</p>
-        <p>This is an ImageQuilt surveying Chinese calligraphy, placed in a full-width figure to accomodate its girth:</p>
-        <figure class="fullwidth"><img src="img/imagequilt-chinese-calligraphy.png" alt="Image of Chinese Calligraphy"/></figure>
-        <p>Here is an ImageQuilt of 47 animal sounds over and over, in a figure constrained to the main text region. This quilt has ragged edges, but the image itself is of course still rectangular.</p>
-        <figure><img src="img/imagequilt-animal-sounds.png" alt="Image of animal sounds"/></figure>
-      </section>
+        <h2 id="epilogue">Contact</h2>
+<p>Feel free to reach out to Chalence at: <a href="mailto:csafranek@gmail.com">csafranek@gmail.com</a> or <a href="http://chalence.github.io">here</a></p>
 
-      <section>
-        <h2 id="epilogue">Epilogue</h2>
-        <p>Many thanks go to Edward Tufte for leading the way with his work. It is only through his kind and careful editing that this project accomplishes what it does. All errors of implementation are of course mine.</p>
-      </section>
-    </article>
+</section>
+
+
+
+</article>
+
+
   </body>
 </html>
