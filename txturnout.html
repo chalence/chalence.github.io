@@ -24,9 +24,9 @@
 	  </section>
 
 	        <section>
-        <h2 id="introduction">Introduction</h2>
+        <h2 id="introduction">Trying to Flip a Vote?</h2>
 	  
-	  <p>Trying to flip a vote? You'll need to know who is most likely to turn up at the polls.  Any sort of election prediction analysis requires an estimate of the fraction of registered voters who will actually go to the polls and cast a vote — i.e., the voter turnout rate. This voter fraction, calibrated with registration statistics and pre-election polling figures, provides political campaigns and politically-minded organizations with a probable result of future elections, and how close any given race will be. They can then determine how to best allocate time and funding, where get-out-the-vote campaigns are most needed (or not necessary), and set the overall communication strategy with their members.</p>
+	  <p>You'll need to know who is most likely to turn up at the polls.  Any sort of election prediction analysis requires an estimate of the fraction of registered voters who will actually go to the polls and cast a vote — i.e., the voter turnout rate. This voter fraction, calibrated with registration statistics and pre-election polling figures, provides political campaigns and politically-minded organizations with a probable result of future elections, and how close any given race will be. They can then determine how to best allocate time and funding, where get-out-the-vote campaigns are most needed (or not necessary), and set the overall communication strategy with their members.</p>
 
 	  <p>Traditionally, determining how many people will actually vote is done with pre-election polling. However, direct polling is expensive and slow, and prone to a slew of random and systematic errors. The efficacy of direct phone-based polling has <a href="https://www.nytimes.com/2015/06/21/opinion/sunday/whats-the-matter-with-polling.html?_r=0">plummeted</a> thanks to the proliferation of cell phones and caller-id. Instead, predicting expected voter turnout rates from pre-existing, and mostly public, data represents a far more accurate and efficient approach.
 	  </p>
@@ -46,21 +46,22 @@ With one week to improve Value Voting's voter turnout prediction methodology, I 
 
 
       <section>
-<h2 id="getting-started">Starting Out</h2>
+<h2 id="getting-started">Exploring the Data</h2>
 
 <p>
-I was supplied me with the 2016 voter registration role for the state of Texas, which includes the voter registration details for 14+ million Texans. Importantly, the data also included past election participation, for general & presidential (2008, 2012, 2016, etc.), midterm (2010, 2012, etc.) and primary elections. While voter registration, name, address, and past participation is publicly available, the dataset also included a number of externally sourced & engineered features, such as cell phone number, number of people in household, race, and gender.
+Value Voting supplied me with the 2016 voter registration role for the state of Texas, which includes the voter registration details for 14+ million Texans. Importantly, the data also included past election participation, for general & presidential (2008, 2012, 2016, etc.), midterm (2010, 2012, etc.) and primary elections. While voter registration, name, address, and past participation is publicly available, the dataset also included a number of externally sourced & engineered features, such as cell phone number, number of people in household, race, and gender.
 </p>
 
 
 <p>
-I was additionally given a high-level summary of every past Texas election (Federal, State, & primaries), which included winner votes, runner-up votes, and total number of candidates running. Finally, for Texas State House and Senate primary races, I supplemented this election summary with publicly available data of money spent by candidates.
+I was additionally given a high-level summary of every past Texas election (Federal, State, & primaries), which included winner votes, runner-up votes, and total number of candidates running. For Texas State House and Senate primary races, I supplemented this election summary with other publicly available data, such as the total funds spent by various candidates.
 </p>
 
 
 
 <p>
-My initial step were search for any high-level insights which would inform me if a demographic approach would work, done by finding trends between overall voter turnout rate and demographic groups. The following plot is one such example, where I show the overall voting turnout rate for different age groups:</p>
+I started by looking for high-level insights that would indicate any potential demographic patterns, a straightforward comparison of trends between overall voter turnout rate and demographic groups. For example, analyzing the overall voter turnout by age group produces this plot:
+</p>
 
         <figure>
           <label for="mn-exports-imports" class="margin-toggle">&#8853;</label><input type="checkbox" id="mn-exports-imports" class="margin-toggle"/><span class="marginnote">Voter turnout rate in the 2016 general election broken down by age group.</span>
@@ -68,9 +69,8 @@ My initial step were search for any high-level insights which would inform me if
         </figure>
 
 
-<p>Unsurprisingly, people below the age of 30 tend to vote less than older people, though the trend does start to turn over for people older than 70.</p>
+<p>Unsurprisingly, people below the age of 30 tend to vote less than older people, though the trend does begin to turn over for people older than 70.</p>
 
-<p>Voter turnout also depends strongly on a given person’s voting history — people who voted in the past will tend to do so again, as we see below, where voter turnout rate is segmented based on the number of previous votes (since 2000) someone has participated in (this also conflates age with turnout rate, though — someone who has been able to vote in 6 votes as of 2016 must have been born in or before 1986).</p>
 
         <figure>
           <label for="mn-exports-imports" class="margin-toggle">&#8853;</label><input type="checkbox" id="mn-exports-imports" class="margin-toggle"/><span class="marginnote">Voter turnout rate in the 2016 general election broken number of previous votes cast in general elections since 2000</span>
@@ -78,7 +78,10 @@ My initial step were search for any high-level insights which would inform me if
 </figure>
 
 
-<p>Finally, while analyzing the data, it also became clear that different districts (Federal and State) have large differences in the voter turnout rate. This could be due to a number of reasons -- different levels of enthusiasm for a given race, overall socioeconomic status, differences between ethnic groups, access to voting locations, etc. Since Value Voting is primarily interested in the voter turnout rate within these districts, and I didn't have immediate access to this supplementary data, it made sense to separate this analysis by district, opposed to combining them all into a single model.
+<p>As seen above, voter turnout also depends strongly on a given person’s voting history — people who voted in the past will tend to do so again, where voter turnout rate is segmented based on the number of previous votes (since 2000) someone has participated in<label for="sn-in-his-later-books" class="margin-toggle sidenote-number"></label> <span class="sidenote">This also conflates age with turnout rate, though — someone who has been able to vote in 6 votes as of 2016 must have been born in or before 1986 </span>.</p>
+
+
+<p>Finally, while analyzing the data, it also became clear that different districts (Federal and State) have large differences in the voter turnout rate. This could be due to a number of reasons -- different levels of enthusiasm for a given race, overall socioeconomic status, differences between ethnic groups, access to voting locations, etc. Since Value Voting is primarily interested in the voter turnout rate within individual districts, and I didn't have immediate access to this supplementary data, it made sense to separate this analysis by district, opposed to combining them all into a single model.
 </p>
 
 
@@ -94,16 +97,16 @@ For my first approach to this problem, I opted for to focus on voter demographic
 <p>
 While this is a relatively straightforward binary classification problem, the main challenge lies in how to compress a person’s potentially complex voting history (composed of state and presidential primaries, and general elections) to one or a few meaningful quantitative features. I experimented with a number of approaches:
 <ul>
-<li>Last1 = Did a person vote in the previous election?</li> 
-<li>LastX = Of the last X votes, how many did they vote in?</li>
-<li>Voting fraction = of the number of votes a person has been eligible for, what fraction did they vote in? </li>
-<li>Voting fraction + tscore. Here tscore is a quantitive value between 0 and 1 which expresses how recently a person’s votes have been<label for="sn-in-his-later-books" class="margin-toggle sidenote-number"></label> <span class="sidenote">For example is someone voted in 2014, but not in 2016, their voting fraction would be 0.5, but with a tscore of 0. The reverse -- voted 2016, not 2014 -- would result in a tscore of 1.  </span> </li>
+<li>Last1: Did a person vote in the previous election?</li> 
+<li>LastX: Of the last X votes, how many did they vote in?</li>
+<li>Voting fraction: of the number of votes a person has been eligible for, what fraction did they vote in? </li>
+<li>Voting fraction + tscore: Here tscore is a quantitive value between 0 and 1 which expresses how recently a person’s votes have been<label for="sn-in-his-later-books" class="margin-toggle sidenote-number"></label> <span class="sidenote">For example is someone voted in 2014, but not in 2016, their voting fraction would be 0.5, but with a tscore of 0. The reverse -- voted 2016, not 2014 -- would result in a tscore of 1.  </span> </li>
   <li>Individual binary 0 & 1 labels for each individual type of vote and how many votes ago in the past it was. </li>
  </ul>
 </p>
 
 <p>
-All of these voting history features produce accuracies within 5% of each other. For its simplicity and accuracy, though, I find LastX with X=2 to produce the best classification rates, and has the advantage of being relatively simple to understand and compute. Specifically, Last2 is the number of votes in the last two similar elections (midterm, primary, presidential) compared with the target variable.
+There is not too much difference between these approaches: all voting history features produce accuracies within 5% of each other. Overall, though, I find LastX with X=2 to produce near the best classification rates, and has the advantage of being relatively simple to understand and compute. Specifically, Last2 is the number of votes in the last two similar elections (midterm, primary, presidential) compared with the target variable.
 </p>
 
 <p>
@@ -112,16 +115,30 @@ For the classification, I began with logistic regression. It is fast to train, a
 
 
 <p>
-Here I will focus on the prediction of Federal House races, though in principle this methodology would apply to any election. I train my model on whether or not someone voted in 2012 based on their past election activtiy. For validation, I test both on held-out 2012 data for use in tuning the model, and on 'unseen' 2016 election data, to gauge how well the model performs when working to predict future results. Primarily because past voting activity is such a good indicator of future activity, this approach does a fairly good job at predicting voter turnout. Overall, this model achieves accuracies of 78% for 2012 data, and 70% for the 2016 figures; the F1 score, representing the harmonic mean of precision and recall, is 0.81.
+Here I will focus on the prediction of Federal House races, though in principle this methodology would apply to any election: I train the model on whether or not someone voted in 2012 based on their past election activtiy. For validation, I test both on held-out 2012 data for use in tuning the model, and on 'unseen' 2016 election data, to gauge how well the model performs when working to predict future results. Primarily because past voting activity is such a good indicator of future activity, this approach does a fairly good job at predicting voter turnout. Overall, this model achieves accuracies of 78% for 2012 data, and 70% for the 2016 figures<label for="sn-in-his-later-books" class="margin-toggle sidenote-number"></label> <span class="sidenote">If I restrict my data to people with earlier voter registration dates, such that they have the opportunity to have a full Last2 score, the model accuracy jumps by nearly 10%  </span>; the F1 score, representing the harmonic mean of precision and recall, is 0.81.
 </p>
 
 <p>
-Along with a no vote/vote classification, logistic regression also supplies the confidence, in the form of a probability, of its prediction. The probability that someone is going to vote turns out to be an extremely useful metric for Value Voting and its customers since it enables microtargeting. Voter microtargeting is a deliberate focus on individual people or groups by political organizations based on their expected vote or propensity to visit the polls. For example, some organizations may wish to only reach out to those who are almost certain to vote in a forthcoming election, while other outreach campaigns may instead wish to target those on the fence about voting in an effort to increase turnout. If we classify ‘likely voters’ as those with a probability of voting (PV) of PV > 0.9, and ‘on the fence’ voters as those with 0.3 < PV < 0.6, we can immediately understand the characteristics of these two groups by segmenting our dataset:
-Likely voters have an average age of 60, are composed of 88% registered Democrats and Republicans, and have voted an average of 84% of the time they’ve been eligible. Fence voters, on the other hand, have an average age of 43, have only voted an average of 0.6 times, and 66% are unaffiliated with a political party.
+Along with a no vote/vote classification, logistic regression also supplies the confidence, in the form of a probability, of its prediction. The probability that someone is going to vote turns out to be an extremely useful metric for Value Voting and its customers since it enables microtargeting. Voter microtargeting is a deliberate focus on individual people or groups by political organizations based on their expected vote or propensity to visit the polls. For example, some organizations may wish to only reach out to those who are almost certain to vote in a forthcoming election, while other outreach campaigns may instead wish to target those on the fence about voting in an effort to increase turnout. If we classify ‘likely voters’ as those with a probability of voting (PV) of PV > 0.9, and ‘on the fence’ voters as those with 0.3 < PV < 0.6, we can immediately understand the characteristics of these two groups by segmenting our dataset.</p>
+<p>
+Likely voters:
+<ul>
+<li>Average age of 60</li>
+<li>88% registered Democrats and Republicans</li>
+<li>Have voted an average of 84% of the time they’ve been eligible</li>
+</ul>
+<p>
+On-the-fence voters:
 </p>
+<ul>
+<li>Average age of 43</li>
+<li>66% unaffiliated with a political party</li>
+<li>Have only voted an average of 0.6 times</li>
+</ul>
+
 
 <p>
-Unfortunately, though, my goal here was to produce a model which exceeded Value Voting's current working model for the voter turnout rate -- one where the voting turnout rate does not change. Since the previous turnout rate effectively already encapsulates demographic information and voting history information, a demographics based approach represents a negligible improvement with respect predicting the overall voter turnout rate
+Unfortunately, though, my goal here was to produce a model which exceeded Value Voting's current working model for the voter turnout rate -- one where the voting turnout rate does not change. Since the previous turnout rate effectively already encapsulates demographic information and voting history information, a demographics based approach represents a negligible improvement with respect predicting the overall voter turnout rate. I must attack this problem from a different angle.
 <!..My model would only formally be better if demograhpics  
 
 simply using the past voting turnout rate for a similar election (midterm or presidential) is a fairly good approach in the . Adding in additional demograph .
@@ -138,7 +155,7 @@ simply using the past voting turnout rate for a similar election (midterm or pre
 <h2 id="getting-started">Election-Based Approach</h2>
 
 <p>
-To combat the limitation with the demographic-based approach described above, I opted for an approach based on broader, election-based characteristics to see if there were certain features that could be used to build a predictive model for the voter turnout rates. Using the corpus of 2012, 2014, and 2016 Texas-state House and Senate races<label for="sn-in-his-later-books" class="margin-toggle sidenote-number"></label> <span class="sidenote">Texas districts were redrawn in 2012, thus making extending this analysis back a much more complex endeavor.  </span>, I began to see if there was a correlation between the competitiveness of a race and the voter turnout race:
+To combat the limitation with the demographic-based attack plan described above, I opted for an approach based on broader, election-based characteristics to see if there were certain features that could be used to build a predictive model for the voter turnout rates. Using the corpus of 2012, 2014, and 2016 Texas-state House and Senate races<label for="sn-in-his-later-books" class="margin-toggle sidenote-number"></label> <span class="sidenote">Texas districts were redrawn in 2012, thus making extending this analysis back a much more complex endeavor.  </span>, I began to see if there was a correlation between the competitiveness of a race and the voter turnout race:
 </p>
 
         <figure>
@@ -147,16 +164,16 @@ To combat the limitation with the demographic-based approach described above, I 
         </figure>
 
 <p>
-Here, I'm showing a scatter plot of the voter turnout rate vs. vote margin for different election districts. Here, vote margin (which I use here as a proxy for competitiveness) is the percent difference  of received votes between the race victor and the runner up, such that 0% would be a tie, and 100% is an uncontested race. There doesn’t seem to be much of a correlation, which came as a surprise: I would naively have expected close, competitive races to have attracted more people to the polls in a particular district.
+Here, I'm showing a scatter plot of the voter turnout rate vs. vote margin for different election districts. Here, vote margin (which I use as a proxy for competitiveness) is the percent difference  of received votes between the race victor and the runner up, such that 0% would be a tie, and 100% is an uncontested race. There doesn’t seem to be much of a correlation, which came as a surprise: I would naively have expected close, competitive races to have attracted more people to the polls in a particular district.
 </p>
 
 <p>
 However, different districts, with varied demographics (age distribution, income, density, etc.), likely have overall base voter turnout levels which may muddy the above analysis. Next, I took the districts which had the largest changes in voter turnout rates, to see if I could isolate what caused the change. Here is the voter turnout <i>change</i> between the 2012 and 2016 general election based on the competiveness of the equivalent 2012 election:
 </p>
 
-
+10.0,0.0,10.0,50.0,80,110.0
         <figure>
-          <label for="mn-exports-imports" class="margin-toggle">&#8853;</label><input type="checkbox" id="mn-exports-imports" class="margin-toggle"/><span class="marginnote">The change in the voter turnout rate in Texas State House and Senate primary races, broken up by the vote margin of the <i>previous</i> 2012 election. Note: overall, election turnout increased from 2012 to 2016.</span>
+          <label for="mn-exports-imports" class="margin-toggle">&#8853;</label><input type="checkbox" id="mn-exports-imports" class="margin-toggle"/><span class="marginnote">The change in the voter turnout rate in Texas State House and Senate primary races, broken up by the vote margin of the <i>previous</i> 2012 election. Very close races correspond to a vote margin of 0-10%, close is 10-50%, safe is 50-99%, and uncontested races are defined to have a 100% vote margin.  Note: overall, election turnout increased from 2012 to 2016.</span>
           <img src="images/turnout_change_margin.png" alt="vmargin-turnout" />
         </figure>
 
