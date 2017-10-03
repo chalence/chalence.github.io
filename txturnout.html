@@ -155,7 +155,7 @@ simply using the past voting turnout rate for a similar election (midterm or pre
 <h2 id="getting-started">Election-Based Approach</h2>
 
 <p>
-To combat the limitation with the demographic-based attack plan described above, I opted for an approach based on broader, election-based characteristics to see if there were certain features that could be used to build a predictive model for the voter turnout rates. Using the corpus of 2012, 2014, and 2016 Texas-state House and Senate races<label for="sn-in-his-later-books" class="margin-toggle sidenote-number"></label> <span class="sidenote">Texas districts were redrawn in 2012, thus making extending this analysis back a much more complex endeavor.  </span>, I began to see if there was a correlation between the competitiveness of a race and the voter turnout race:
+To combat the limitations with the demographic-based plan described above, I experimented with alternative approachs based on broader, election-based characteristics to see if there were certain features that could be used to build a predictive model for future voter turnout rates. Using the corpus of 2012, 2014, and 2016 Texas-state House and Senate races<label for="sn-in-his-later-books" class="margin-toggle sidenote-number"></label> <span class="sidenote">Texas districts were redrawn in 2012, thus making extending this analysis back a much more complex endeavor.  </span>, I began to see if there was a correlation between the competitiveness of a race and the voter turnout race:
 </p>
 
         <figure>
@@ -171,7 +171,6 @@ Here, I'm showing a scatter plot of the voter turnout rate vs. vote margin for d
 However, different districts, with varied demographics (age distribution, income, density, etc.), likely have overall base voter turnout levels which may muddy the above analysis. Next, I took the districts which had the largest changes in voter turnout rates, to see if I could isolate what caused the change. Here is the voter turnout <i>change</i> between the 2012 and 2016 general election based on the competiveness of the equivalent 2012 election:
 </p>
 
-10.0,0.0,10.0,50.0,80,110.0
         <figure>
           <label for="mn-exports-imports" class="margin-toggle">&#8853;</label><input type="checkbox" id="mn-exports-imports" class="margin-toggle"/><span class="marginnote">The change in the voter turnout rate in Texas State House and Senate primary races, broken up by the vote margin of the <i>previous</i> 2012 election. Very close races correspond to a vote margin of 0-10%, close is 10-50%, safe is 50-99%, and uncontested races are defined to have a 100% vote margin.  Note: overall, election turnout increased from 2012 to 2016.</span>
           <img src="images/turnout_change_margin.png" alt="vmargin-turnout" />
